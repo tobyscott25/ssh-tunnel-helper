@@ -9,39 +9,10 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-type PortForwarding struct {
-	LocalPort  int    `mapstructure:"local_port"`
-	RemoteHost string `mapstructure:"remote_host"`
-	RemotePort int    `mapstructure:"remote_port"`
-}
-
-type Connection struct {
-	Name        string           `mapstructure:"name"`
-	Type        string           `mapstructure:"type"`
-	User        string           `mapstructure:"user"`
-	Server      string           `mapstructure:"server"`
-	Key         string           `mapstructure:"key"`
-	Port        int              `mapstructure:"port,omitempty"`
-	Forwardings []PortForwarding `mapstructure:"forwardings,omitempty"`
-}
-
 func StartSOCKSTunnel(conn Connection) {
-	signer, err := CustomParsePrivateKey(conn.Key)
+	sshConn, err := EstablishSSHConnection(conn.User, conn.Server, conn.Key)
 	if err != nil {
 		log.Fatalf("%v", err)
-	}
-
-	config := &ssh.ClientConfig{
-		User: conn.User,
-		Auth: []ssh.AuthMethod{
-			ssh.PublicKeys(signer),
-		},
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-	}
-
-	sshConn, err := ssh.Dial("tcp", conn.Server, config)
-	if err != nil {
-		log.Fatalf("unable to connect to [%s]: %v", conn.Server, err)
 	}
 	defer sshConn.Close()
 
