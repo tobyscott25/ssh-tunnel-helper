@@ -1,10 +1,13 @@
 # SSH Tunnel Helper
 
-A simple CLI program to instantly establish an SSH connection from a selection of saved connections in a YAML config file.
+A CLI tool to manage SSH tunnels for SOCKS proxies and port forwarding using configuration from a YAML file.
 
 ## Usage
 
 ```shell
+go run main.go start
+
+# or, to specify a config file that's not the default ($HOME/.config/ssh-tunnel-helper/config.yaml)
 go run main.go start --config config.yaml
 ```
 
