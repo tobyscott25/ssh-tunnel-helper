@@ -1,11 +1,25 @@
 connections:
-  - name: "Home Server"
+  - name: "Home SOCKS Proxy"
+    type: "socks"
     user: "toby"
     server: "myserver.com:22"
     key: "/path/to/your/secret_key"
     port: 1337
-  - name: "Office Server"
+  - name: "Office SOCKS Proxy"
+    type: "socks"
     user: "toby"
     server: "office.myserver.com:22"
     key: "/path/to/your/office_key"
     port: 1338
+  - name: "Home NAS"
+    type: "portforward"
+    user: "toby"
+    server: "myserver.com:22"
+    key: "/path/to/your/id_ed25519"
+    forwardings:
+      - local_port: 1139
+        remote_host: "nas"
+        remote_port: 139
+      - local_port: 1455
+        remote_host: "nas"
+        remote_port: 445
