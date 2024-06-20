@@ -30,10 +30,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is "+configDir+"/config.yaml)")
-	rootCmd.PersistentFlags().StringP("author", "a", "Toby Scott <hi@tobyscott.dev>", "Author name for copyright attribution")
-
 	rootCmd.AddCommand(StartCmd)
 }
 
