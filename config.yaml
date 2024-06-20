@@ -1,0 +1,11 @@
+connections:
+  - name: "Home Server"
+    user: "toby"
+    server: "myserver.com:22"
+    key: "/path/to/your/secret_key"
+    port: 1337
+  - name: "Office Server"
+    user: "toby"
+    server: "office.myserver.com:22"
+    key: "/path/to/your/office_key"
+    port: 1338
