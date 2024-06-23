@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net"
 
@@ -10,7 +9,7 @@ import (
 )
 
 func StartPortForwarding(conn PortForwardConnectionConfig, server SshServerConfig) {
-	sshConn, err := EstablishSSHConnection(server.User, server.Host, server.Port, server.Key)
+	sshConn, err := EstablishSshConnection(server.User, server.Host, server.Port, server.Key)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -43,16 +42,6 @@ func StartPortForwarding(conn PortForwardConnectionConfig, server SshServerConfi
 
 func handlePortForwarding(sshConn *ssh.Client, localConn net.Conn, fwd PortForwarding) {
 	defer localConn.Close()
-
-	remoteConn, err := sshConn.Dial("tcp", fmt.Sprintf("%s:%d", fwd.RemoteHost, fwd.RemotePort))
-	if err != nil {
-		log.Printf("failed to establish remote connection to %s:%d: %v", fwd.RemoteHost, fwd.RemotePort, err)
-		return
-	}
-	defer remoteConn.Close()
-
-	go func() {
-		_, _ = io.Copy(remoteConn, localConn)
-	}()
-	_, _ = io.Copy(localConn, remoteConn)
+	serverAddress := fmt.Sprintf("%s:%d", fwd.RemoteHost, fwd.RemotePort)
+	OpenSshTcpConnection(sshConn, localConn, serverAddress)
 }

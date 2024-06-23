@@ -53,7 +53,7 @@ var StartCmd = &cobra.Command{
 			if !ok {
 				log.Fatalf("unknown server: %s", selected.SshServerConfig)
 			}
-			helpers.StartSOCKSTunnel(selected, server)
+			helpers.StartSocksTunnel(selected, server)
 		} else {
 			selected := config.PortForwardConnections[choice-len(config.SocksConnections)]
 			server, ok := servers[selected.SshServerConfig]

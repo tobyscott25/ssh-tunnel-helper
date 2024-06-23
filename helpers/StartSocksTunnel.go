@@ -2,15 +2,14 @@ package helpers
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net"
 
 	"golang.org/x/crypto/ssh"
 )
 
-func StartSOCKSTunnel(conn SocksConnectionConfig, server SshServerConfig) {
-	sshConn, err := EstablishSSHConnection(server.User, server.Host, server.Port, server.Key)
+func StartSocksTunnel(conn SocksConnectionConfig, server SshServerConfig) {
+	sshConn, err := EstablishSshConnection(server.User, server.Host, server.Port, server.Key)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -31,22 +30,11 @@ func StartSOCKSTunnel(conn SocksConnectionConfig, server SshServerConfig) {
 			continue
 		}
 
-		go handleSocksConnectionConfig(sshConn, localConn)
+		go handleSocksConnection(sshConn, localConn)
 	}
 }
 
-func handleSocksConnectionConfig(sshConn *ssh.Client, localConn net.Conn) {
+func handleSocksConnection(sshConn *ssh.Client, localConn net.Conn) {
 	defer localConn.Close()
-
-	remoteConn, err := sshConn.Dial("tcp", "localhost:1080")
-	if err != nil {
-		log.Printf("failed to establish remote connection: %v", err)
-		return
-	}
-	defer remoteConn.Close()
-
-	go func() {
-		_, _ = io.Copy(remoteConn, localConn)
-	}()
-	_, _ = io.Copy(localConn, remoteConn)
+	OpenSshTcpConnection(sshConn, localConn, "localhost:1080")
 }
