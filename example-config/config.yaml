@@ -1,0 +1,39 @@
+servers:
+  - name: "Home Lab"
+    user: "toby"
+    host: "home.example.com"
+    port: 22
+    key: "/path/to/your/secret_key"
+  - name: "Office"
+    user: "toby"
+    host: "office.example.com"
+    port: 22
+    key: "/path/to/your/secret_key"
+
+socks_connections:
+  - name: "Home SOCKS Proxy"
+    server: "Home Lab"
+    port: 1337
+
+portforward_connections:
+  - name: "NAS Samba Share"
+    server: "Home Lab"
+    forwardings:
+      - local_port: 1139
+        remote_host: "nas"
+        remote_port: 139
+      - local_port: 1455
+        remote_host: "nas"
+        remote_port: 445
+  - name: "Synology DSM"
+    server: "Home Lab"
+    forwardings:
+      - local_port: 5000
+        remote_host: "nas"
+        remote_port: 5000
+  - name: "Jellyfin"
+    server: "Home Lab"
+    forwardings:
+      - local_port: 8096
+        remote_host: "nas"
+        remote_port: 8096

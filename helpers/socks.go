@@ -9,8 +9,8 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-func StartSOCKSTunnel(conn Connection) {
-	sshConn, err := EstablishSSHConnection(conn.User, conn.Server, conn.Key)
+func StartSOCKSTunnel(conn SocksConnectionConfig, server SshServerConfig) {
+	sshConn, err := EstablishSSHConnection(server.User, server.Host, server.Port, server.Key)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -31,11 +31,11 @@ func StartSOCKSTunnel(conn Connection) {
 			continue
 		}
 
-		go handleSOCKSConnection(sshConn, localConn)
+		go handleSocksConnectionConfig(sshConn, localConn)
 	}
 }
 
-func handleSOCKSConnection(sshConn *ssh.Client, localConn net.Conn) {
+func handleSocksConnectionConfig(sshConn *ssh.Client, localConn net.Conn) {
 	defer localConn.Close()
 
 	remoteConn, err := sshConn.Dial("tcp", "localhost:1080")

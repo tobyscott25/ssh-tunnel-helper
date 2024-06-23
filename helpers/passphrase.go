@@ -12,7 +12,7 @@ import (
 	"golang.org/x/term"
 )
 
-func EstablishSSHConnection(user, server, keyPath string) (*ssh.Client, error) {
+func EstablishSSHConnection(user string, host string, port int, keyPath string) (*ssh.Client, error) {
 	// Try to connect to the ssh-agent
 	sshAgent, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
 	if err == nil {
@@ -24,7 +24,7 @@ func EstablishSSHConnection(user, server, keyPath string) (*ssh.Client, error) {
 			},
 			HostKeyCallback: ssh.InsecureIgnoreHostKey(), // Don't use this in production
 		}
-		client, err := ssh.Dial("tcp", server, config)
+		client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", host, port), config)
 		if err == nil {
 			return client, nil
 		}
@@ -45,9 +45,9 @@ func EstablishSSHConnection(user, server, keyPath string) (*ssh.Client, error) {
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
-	client, err := ssh.Dial("tcp", server, config)
+	client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", host, port), config)
 	if err != nil {
-		return nil, fmt.Errorf("unable to connect to [%s]: %v", server, err)
+		return nil, fmt.Errorf("unable to connect to [%s]: %v", fmt.Sprintf("%s:%d", host, port), err)
 	}
 	return client, nil
 }

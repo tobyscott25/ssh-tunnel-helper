@@ -9,8 +9,8 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-func StartPortForwarding(conn Connection) {
-	sshConn, err := EstablishSSHConnection(conn.User, conn.Server, conn.Key)
+func StartPortForwarding(conn PortForwardConnectionConfig, server SshServerConfig) {
+	sshConn, err := EstablishSSHConnection(server.User, server.Host, server.Port, server.Key)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

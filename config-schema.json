@@ -1,0 +1,118 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SSH Tunnel Helper Configuration",
+    "type": "object",
+    "properties": {
+        "servers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "A name of the SSH server"
+                    },
+                    "user": {
+                        "type": "string",
+                        "description": "The SSH user"
+                    },
+                    "host": {
+                        "type": "string",
+                        "description": "The SSH host"
+                    },
+                    "port": {
+                        "type": "integer",
+                        "description": "The SSH port",
+                        "default": 22
+                    },
+                    "key": {
+                        "type": "string",
+                        "description": "The path to the SSH key"
+                    }
+                },
+                "required": [
+                    "name",
+                    "user",
+                    "host",
+                    "key"
+                ]
+            }
+        },
+        "socks_connections": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the SOCKS connection"
+                    },
+                    "server": {
+                        "type": "string",
+                        "description": "The server to use"
+                    },
+                    "port": {
+                        "type": "integer",
+                        "description": "The local port for the SOCKS proxy"
+                    }
+                },
+                "required": [
+                    "name",
+                    "server",
+                    "port"
+                ]
+            }
+        },
+        "portforward_connections": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the port forwarding connection"
+                    },
+                    "server": {
+                        "type": "string",
+                        "description": "The server to use"
+                    },
+                    "forwardings": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "local_port": {
+                                    "type": "integer",
+                                    "description": "The local port to forward"
+                                },
+                                "remote_host": {
+                                    "type": "string",
+                                    "description": "The remote host to forward to"
+                                },
+                                "remote_port": {
+                                    "type": "integer",
+                                    "description": "The remote port to forward to"
+                                }
+                            },
+                            "required": [
+                                "local_port",
+                                "remote_host",
+                                "remote_port"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "name",
+                    "server",
+                    "forwardings"
+                ]
+            }
+        }
+    },
+    "required": [
+        "servers",
+        "socks_connections",
+        "portforward_connections"
+    ]
+}
